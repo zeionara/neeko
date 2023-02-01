@@ -10,12 +10,26 @@ To set up environment use the provided `setup.sh` script, which will download an
 ./setup.sh
 ```
 
-## Run the project
-
-To run the project use the following command (from the root of the cloned repo):
+Pack `neeko` package and push it to the local repo:
 
 ```sh
-bal run neeko -- -Cngrams='li ed'
+cd neeko
+bal pack && bal push --repository local
+cd -
+```
+
+## Run the project
+
+To run the project use the following command (from the root of the cloned repo) to generate an inverted index:
+
+```sh
+bal run neeko -- -CmaxNgramLength=3
+```
+
+Then after the following command to find matching names using generated index:
+
+```sh
+bal run search -- -Cngrams='li ed'
 ```
 
 The command allows to find all words which match at least one of character n-grams. The otuput looks like this:

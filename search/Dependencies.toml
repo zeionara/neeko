@@ -87,9 +87,6 @@ dependencies = [
 	{org = "ballerina", name = "time"},
 	{org = "ballerina", name = "url"}
 ]
-modules = [
-	{org = "ballerina", packageName = "http", moduleName = "http"}
-]
 
 [[package]]
 org = "ballerina"
@@ -253,9 +250,6 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.string"}
 ]
-modules = [
-	{org = "ballerina", packageName = "regex", moduleName = "regex"}
-]
 
 [[package]]
 org = "ballerina"
@@ -263,9 +257,6 @@ name = "serdes"
 version = "0.1.2"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
-]
-modules = [
-	{org = "ballerina", packageName = "serdes", moduleName = "serdes"}
 ]
 
 [[package]]
@@ -318,6 +309,19 @@ dependencies = [
 ]
 modules = [
 	{org = "zeio", packageName = "neeko", moduleName = "neeko"}
+]
+
+[[package]]
+org = "zeio"
+name = "search"
+version = "0.1.0"
+dependencies = [
+	{org = "ballerina", name = "io"},
+	{org = "ballerinai", name = "observe"},
+	{org = "zeio", name = "neeko"}
+]
+modules = [
+	{org = "zeio", packageName = "search", moduleName = "search"}
 ]
 
 
