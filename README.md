@@ -1,5 +1,9 @@
 # neeko
 
+<p align="center">
+    <img src="assets/image/logo.png"/>
+</p>
+
 User and project name generator, which makes nicknames following given rules.
 
 ## Install dependencies
