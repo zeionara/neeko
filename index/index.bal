@@ -1,3 +1,7 @@
+import ballerina/io;
+
+configurable int logFrequency = 100;
+
 public type InvertedIndex record {
     map<int[]> content;
     string[] vocabulary;
@@ -8,8 +12,14 @@ public function buildInvertedIndex(string[] words, int maxLength = 1) returns ma
 
     int i = 0;  // word index
 
+    int nWords = words.length();
+
     foreach string word in words {
         map<()> seenChars = {};
+
+        if i % logFrequency == 0 {
+            io:println(`Handled ${i} / ${nWords} words`);
+        }
 
         foreach int n in 1 ..< maxLength + 1 {  // character n-gram length
             if n > word.length() {

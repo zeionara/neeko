@@ -4,8 +4,7 @@ import ballerina/regex;
 configurable string ngramSeparator = " ";
 configurable string ngramGroupSeparator = "  ";
 
-public function search(InvertedIndex index, string[] ngrams) returns string[] {
-    // map<()> relevantWordIds = {};
+public function searchConjunctively(InvertedIndex index, string[] ngrams) returns string[] {
     int[][] wordLists = [];
     int[] wordListIndices = [];
 
@@ -14,26 +13,12 @@ public function search(InvertedIndex index, string[] ngrams) returns string[] {
         if wordIds != () {
             wordLists.push(wordIds);
             wordListIndices.push(0);
-            // foreach int i in wordIds {
-            //     string stringifiedIndex = i.toString();
-            //     if !relevantWordIds.hasKey(stringifiedIndex) {
-            //         relevantWordIds[stringifiedIndex] = ();
-            //     }
-            // }
         }
     }
 
-    // io:println(wordLists);
-    // io:println(wordListIndices);
-
     int[] relevantWordIds = [];
 
-    // io:println("Start iterations");
-    // io:println(wordLists);
-
     while true {
-        // io:println("New iteration");
-        // io:println(wordListIndices);
 
         int maxWordIndex = -1;
 
@@ -87,23 +72,17 @@ public function search(InvertedIndex index, string[] ngrams) returns string[] {
 
     }
 
-    // io:println(maxWordIndex);
-    // io:println("Relevant word ids:");
-    // io:println(relevantWordIds);
-
-    // string[] result = relevantWordIds.keys().map(x => check int:fromString(x)).sort().map(i => index.vocabulary[i]);
     string[] result = relevantWordIds.map(i => index.vocabulary[i]);
 
     return result;
 
-    // return ["foo", "bar"];
 }
 
-public function searchd(InvertedIndex index, string[][] ngrams) returns string[] {
+public function search(InvertedIndex index, string[][] ngrams) returns string[] {
     map<boolean> globalListOfWords = {};
 
     foreach var items in ngrams {
-        foreach var word in search(index, items) {
+        foreach var word in searchConjunctively(index, items) {
             boolean? value = globalListOfWords[word];
 
             if value == () {
@@ -115,10 +94,10 @@ public function searchd(InvertedIndex index, string[][] ngrams) returns string[]
     return globalListOfWords.keys();
 }
 
-public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] {
-    return search(index, regex:split(ngrams, ngramSeparator));
+public function splitAndSearchConjunctively(InvertedIndex index, string ngrams) returns string[] {
+    return searchConjunctively(index, regex:split(ngrams, ngramSeparator));
 }
 
-public function splitAndSearchd(InvertedIndex index, string ngrams) returns string[] {
-    return searchd(index, regex:split(ngrams, ngramGroupSeparator).map(x => regex:split(x, ngramSeparator)));
+public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] {
+    return search(index, regex:split(ngrams, ngramGroupSeparator).map(x => regex:split(x, ngramSeparator)));
 }
