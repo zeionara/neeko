@@ -35,7 +35,7 @@ function segment(string[] items, int segmentSize) returns string[][] {
     return segments;
 }
 
-public function main() returns error? {
+public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex | error {
     // var segments = segment(["foo", "bar", "baz", "qux", "quux"], 2);
 
     // io:println(segments);
@@ -53,23 +53,63 @@ public function main() returns error? {
     string content = check response.getTextPayload();
     string[] vocabulary = regex:split(content, wordSeparator);
 
-    var segments = segment(vocabulary, 5000);
-    var nSegments = segments.length();
+    InvertedIndex index = {
+        content: check buildInvertedIndex(vocabulary, maxLength = maxLength),
+        vocabulary: vocabulary
+    };
 
-    int i = 0;
+    return index;
 
-    foreach var part in segments {
-        io:println(`Handling ${i} / ${nSegments} segment`);
+}
 
-        InvertedIndex index = {
-            content: check buildInvertedIndex(part, maxLength = maxNgramLength),
-            vocabulary: part
-        };
+public function main() returns error? {
+    // // var segments = segment(["foo", "bar", "baz", "qux", "quux"], 2);
 
-        string path = string:concat(indexPath, ".", i.toString());
+    // // io:println(segments);
 
-        check writeIndex(path, index);
+    // http:Client githubClient = check new (
+    //     root,
+    //     followRedirects = {
+    //         enabled: true
+    //     }
+    // );
 
-        i += 1;
+    // // http:Response response = check githubClient->/[user]/[gist]/raw/[key]/[filename];
+    // http:Response response = check githubClient->/[user]/[repository]/[branch]/[filename];
+
+    // string content = check response.getTextPayload();
+    // string[] vocabulary = regex:split(content, wordSeparator);
+
+    // InvertedIndex index = {
+    //     content: check buildInvertedIndex(vocabulary, maxLength = maxNgramLength),
+    //     vocabulary: vocabulary
+    // };
+
+    var index = check makeIndex();
+
+    io:println("Searching...");
+
+    foreach string word in splitAndSearch(index, "cls nn  spc nn  cla sp") {
+        io:println(word);
     }
+
+    // var segments = segment(vocabulary, 5000);
+    // var nSegments = segments.length();
+
+    // int i = 0;
+
+    // foreach var part in segments {
+    //     io:println(`Handling ${i} / ${nSegments} segment`);
+
+    //     InvertedIndex index = {
+    //         content: check buildInvertedIndex(part, maxLength = maxNgramLength),
+    //         vocabulary: part
+    //     };
+
+    //     string path = string:concat(indexPath, ".", i.toString());
+
+    //     check writeIndex(path, index);
+
+    //     i += 1;
+    // }
 }

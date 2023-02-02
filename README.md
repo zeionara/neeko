@@ -27,24 +27,37 @@ cd -
 To run the project use the following command (from the root of the cloned repo) to generate an inverted index:
 
 ```sh
-bal run index -- -CmaxNgramLength=3
+bal run search -- -Cngrams='ne eko  ah ri' -CmaxNgramLength=3 -CtopN=20
 ```
 
-Then after the following command to find matching names using generated index:
-
-```sh
-bal run search -- -Cngrams='li ed'
-```
-
-The command allows to find all words which match at least one of character n-grams. The otuput looks like this:
+The command uses [dictionary of english words](https://github.com/dwyl/english-words/blob/master/words_alpha.txt) and allows to find all words which match all of character n-grams separated by single space or any group separated by two spaces. The otuput looks like this:
 
 ```sh
 Matched words:
 
-aahed
-aalii
-aaliis
+mahri
+uriah
+mahori
+meriah
+pahari
+pariah
+zurich
+ahriman
+daribah
+paharia
+pariahs
+rahdari
+saharic
+kekotene
+mahzorim
+saharian
+shaharit
+ahistoric
+bahuvrihi
+guaharibo
 ```
+
+Due to an enormous memory consumption by ballerina during serialization the index is not saved to disk and recomputed each time instead.
 
 # Test
 

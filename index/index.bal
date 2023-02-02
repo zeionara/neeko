@@ -1,6 +1,6 @@
 import ballerina/io;
 
-configurable int logFrequency = 100;
+configurable int logFrequency = 100000;
 
 public type InvertedIndex record {
     map<int[]> content;
