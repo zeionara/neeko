@@ -1,12 +1,32 @@
-import ballerina/io;
+// import ballerina/io;
 import ballerina/test;
 
 @test:Config {}
-function conjunctionTest() returns error? {
+function conjunctionTestOnSingleWord() returns error? {
     var index = check readIndex(indexPath);
-    var matches = check search(index, ["li", "ed"]);
+    var matches = check search(index, ["aa", "ed"]);
 
-    io:println(matches);
+    // io:println(matches);
 
-    test:assertEquals(2, 2);
+    test:assertEquals(matches, ["aahed"]);
+}
+
+@test:Config {}
+function conjunctionTestOnThreeWords() returns error? {
+    var index = check readIndex(indexPath);
+    var matches = check search(index, ["aa", "i"]);
+
+    // io:println(matches);
+
+    test:assertEquals(matches, ["aahing", "aalii", "aaliis"]);
+}
+
+@test:Config {}
+function conjunctionTestOnThreeNgrams() returns error? {
+    var index = check readIndex(indexPath);
+    var matches = check search(index, ["aa", "i", "l"]);
+
+    // io:println(matches);
+
+    test:assertEquals(matches, ["aalii", "aaliis"]);
 }
