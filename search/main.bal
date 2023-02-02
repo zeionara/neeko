@@ -1,7 +1,7 @@
 import ballerina/io;
 import index;
 
-configurable string indexPath = "assets/index.bin";
+configurable string indexPath = "assets/index/index.bin.0";
 
 configurable string ngrams = ?;
 
