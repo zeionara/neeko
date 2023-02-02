@@ -2,8 +2,9 @@
 import ballerina/regex;
 
 configurable string ngramSeparator = " ";
+configurable string ngramGroupSeparator = "  ";
 
-public function search(InvertedIndex index, string[] ngrams) returns string[] | error {
+public function search(InvertedIndex index, string[] ngrams) returns string[] {
     // map<()> relevantWordIds = {};
     int[][] wordLists = [];
     int[] wordListIndices = [];
@@ -98,6 +99,26 @@ public function search(InvertedIndex index, string[] ngrams) returns string[] | 
     // return ["foo", "bar"];
 }
 
-public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] | error {
+public function searchd(InvertedIndex index, string[][] ngrams) returns string[] {
+    map<boolean> globalListOfWords = {};
+
+    foreach var items in ngrams {
+        foreach var word in search(index, items) {
+            boolean? value = globalListOfWords[word];
+
+            if value == () {
+                globalListOfWords[word] = false;
+            }
+        }
+    }
+
+    return globalListOfWords.keys();
+}
+
+public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] {
     return search(index, regex:split(ngrams, ngramSeparator));
+}
+
+public function splitAndSearchd(InvertedIndex index, string ngrams) returns string[] {
+    return searchd(index, regex:split(ngrams, ngramGroupSeparator).map(x => regex:split(x, ngramSeparator)));
 }
