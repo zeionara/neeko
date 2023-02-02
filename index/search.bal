@@ -6,8 +6,9 @@ public function search(InvertedIndex index, string[] ngrams) returns string[] | 
     map<()> relevantWordIds = {};
 
     foreach string ngram in ngrams {
-        if index.content.hasKey(ngram) {
-            foreach int i in index.content.get(ngram) {
+        int[]? wordIds = index.content[ngram];
+        if wordIds != () {
+            foreach int i in wordIds {
                 string stringifiedIndex = i.toString();
                 if !relevantWordIds.hasKey(stringifiedIndex) {
                     relevantWordIds[stringifiedIndex] = ();

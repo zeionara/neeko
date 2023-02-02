@@ -9,7 +9,15 @@ public function main() returns error? {
     index:InvertedIndex index = check index:readIndex(indexPath);
 
     io:println("Matched words:\n");
-    foreach string word in check index:splitAndSearch(index, ngrams) {
+
+    string[] matchedWords = check index:splitAndSearch(index, ngrams);
+
+    string[] sortedMatchedWords = from var e in matchedWords
+                                  order by e.length() ascending, e ascending
+                                  select e;
+
+    // foreach string word in matchedWords {
+    foreach string word in sortedMatchedWords {
         io:println(word);
     }
 }
