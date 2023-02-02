@@ -9,6 +9,6 @@ observabilityIncluded = true
 
 [[dependency]]
 org = "zeio"
-name = "neeko"
-version = "0.2.0"
+name = "index"
+version = "0.3.0"
 repository = "local"

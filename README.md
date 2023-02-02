@@ -27,7 +27,7 @@ cd -
 To run the project use the following command (from the root of the cloned repo) to generate an inverted index:
 
 ```sh
-bal run neeko -- -CmaxNgramLength=3
+bal run index -- -CmaxNgramLength=3
 ```
 
 Then after the following command to find matching names using generated index:

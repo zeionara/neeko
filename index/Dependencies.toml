@@ -307,8 +307,8 @@ modules = [
 
 [[package]]
 org = "zeio"
-name = "neeko"
-version = "0.2.0"
+name = "index"
+version = "0.3.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "io"},
@@ -317,7 +317,7 @@ dependencies = [
 	{org = "ballerinai", name = "observe"}
 ]
 modules = [
-	{org = "zeio", packageName = "neeko", moduleName = "neeko"}
+	{org = "zeio", packageName = "index", moduleName = "index"}
 ]
 
 
