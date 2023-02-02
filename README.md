@@ -45,3 +45,11 @@ aahed
 aalii
 aaliis
 ```
+
+# Test
+
+To run tests use the following command:
+
+```sh
+bal test index
+```
