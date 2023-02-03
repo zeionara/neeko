@@ -20,6 +20,8 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams) return
 
     while true {
 
+        // Find minimum index that each ngram in query must point to
+
         int maxWordIndex = -1;
 
         foreach var i in 0 ..< wordListIndices.length() {
@@ -31,6 +33,8 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams) return
 
         boolean matches = true;
 
+        // Increase each index until it reaches at least value defined previously
+
         foreach var i in 0 ..< wordListIndices.length() {
             var currentWordListIndex = wordListIndices[i];
             var currentWordIndex = wordLists[i][currentWordListIndex];
@@ -41,11 +45,13 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams) return
                 currentWordIndex = wordLists[i][currentWordListIndex];
             }
 
-            if currentWordIndex > maxWordIndex {
+            if currentWordIndex != maxWordIndex {
                 matches = false;
                 break;
             }
         }
+
+        // If all ids are equal, then found match
 
         if matches {
             relevantWordIds.push(maxWordIndex);
@@ -53,6 +59,8 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams) return
 
         boolean moreIterations = true;
         boolean incrementedValue = false;
+
+        // If got to end of at least one list then stop iterating
 
         foreach var i in 0 ..< wordListIndices.length() {
             if wordListIndices[i] == wordLists[i].length() - 1 {

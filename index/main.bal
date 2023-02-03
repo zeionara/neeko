@@ -59,8 +59,6 @@ public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex 
         vocabulary: vocabulary
     };
 
-    check writeIndex(indexPath, index);
-
     return index;
 
 }
@@ -88,18 +86,24 @@ public function main() returns error? {
     //     vocabulary: vocabulary
     // };
 
-    // var index = check makeIndex();
+    io:println("Generating index...");
 
-    var index = check readIndex(indexPath);
+    var index = check makeIndex(maxLength = maxNgramLength);
 
-    io:println("Searching...");
+    io:println("Generated index, saving...");
+
+    check writeIndex(indexPath, index);
+
+    // var index = check readIndex(indexPath);
+
+    // io:println("Searching...");
 
     // foreach string word in splitAndSearch(index, "cls nn  spc nn  cla sp") {
 
-    // foreach string word in splitAndSearch(index, "li ed  li ed") {
-    foreach string word in splitAndSearch(index, "ah ri").slice(0, 10) {
-        io:println(word);
-    }
+    // foreach string word in splitAndSearch(index, "li  ed") {
+    // // foreach string word in splitAndSearch(index, "ah ri").slice(50) {
+    //     io:println(word);
+    // }
 
     // var segments = segment(vocabulary, 5000);
     // var nSegments = segments.length();
