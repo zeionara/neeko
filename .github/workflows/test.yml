@@ -1,0 +1,11 @@
+name: testing
+on:
+  - push
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: install dependencies
+        run: ./setup.sh
+      - name: run tests
+        run: bal test index
