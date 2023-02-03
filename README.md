@@ -4,6 +4,8 @@
     <img src="assets/image/logo.png"/>
 </p>
 
+[![testing](https://github.com/zeionara/neeko/actions/workflows/test.yml/badge.svg)](https://github.com/zeionara/neeko/actions/workflows/test.yml)
+
 User and project name generator, which makes nicknames following given rules.
 
 ## Install dependencies
