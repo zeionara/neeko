@@ -5,6 +5,9 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+      - name: step into cloned repo
+        run: cd neeko
       - name: install dependencies
         run: ./setup.sh
       - name: run tests
