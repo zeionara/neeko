@@ -8,6 +8,8 @@ type SerializableInvertedIndex record {
 
     string[] ngrams;
     int[] lastIds;
+
+    int maxNgramLength;
 };
 
 
@@ -33,7 +35,8 @@ public function readIndex(string path) returns InvertedIndex | error {
 
     InvertedIndex index = {
         content: content,
-        vocabulary: serializableIndex.vocabulary
+        vocabulary: serializableIndex.vocabulary,
+        maxNgramLength: serializableIndex.maxNgramLength
     };
 
     return index;
@@ -80,7 +83,8 @@ public function writeIndex(string path, InvertedIndex index) returns error? {
         // vocabulary: ngramToLastWordIndexInMergedList
         ngrams: ngrams,
         vocabulary: index.vocabulary,
-        lastIds: lastIds
+        lastIds: lastIds,
+        maxNgramLength: index.maxNgramLength
     };
 
     // io:println(serializableIndex);

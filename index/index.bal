@@ -5,6 +5,7 @@ configurable int logFrequency = 100000;
 public type InvertedIndex record {
     map<int[]> content;
     string[] vocabulary;
+    int maxNgramLength;
 };
 
 public function buildInvertedIndex(string[] words, int maxLength = 1) returns map<int[]>|error {

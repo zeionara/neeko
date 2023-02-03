@@ -42,3 +42,13 @@ function disjunctionTestWithSplitting() returns error? {
 
     test:assertEquals(matches, ["aahed", "aaliis"]);
 }
+
+@test:Config {}
+function longNgrams() returns error? {
+    var index = check readIndex(testIndexPath);
+    var matches = splitAndSearch(index, "ahdlis");
+
+    if !(matches is error) {
+        test:assertFail(msg = "Expected an error");
+    }
+}

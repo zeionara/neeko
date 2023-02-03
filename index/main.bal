@@ -56,7 +56,8 @@ public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex 
 
     InvertedIndex index = {
         content: check buildInvertedIndex(vocabulary, maxLength = maxLength),
-        vocabulary: vocabulary
+        vocabulary: vocabulary,
+        maxNgramLength: maxLength
     };
 
     return index;
@@ -101,7 +102,7 @@ public function main() returns error? {
     // foreach string word in splitAndSearch(index, "cls nn  spc nn  cla sp") {
 
     // foreach string word in splitAndSearch(index, "li  ed") {
-    // // foreach string word in splitAndSearch(index, "ah ri").slice(50) {
+    // foreach string word in (check splitAndSearch(index, "ah ri")).slice(50) {
     //     io:println(word);
     // }
 

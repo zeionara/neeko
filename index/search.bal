@@ -4,7 +4,24 @@ import ballerina/regex;
 configurable string ngramSeparator = " ";
 configurable string ngramGroupSeparator = "  ";
 
-public function searchConjunctively(InvertedIndex index, string[] ngrams) returns string[] {
+public function searchConjunctively(InvertedIndex index, string[] ngrams, boolean checkNgramLength = true) returns string[] | error {
+
+    if checkNgramLength {
+        int maxAllowedNgramLength = index.maxNgramLength;
+        int maxActualNgramLength = -1;
+
+        foreach var ngram in ngrams {
+            int currentNgramLength = ngram.length();
+            if currentNgramLength > maxActualNgramLength || maxActualNgramLength < 0 {
+                maxActualNgramLength = currentNgramLength;
+            }
+        }
+
+        if maxActualNgramLength > maxAllowedNgramLength {
+            return error(string`Ngrams must not be longer than ${maxAllowedNgramLength} characters. Try updating the index using following command: bal run index -- -CmaxNgramLength=${maxActualNgramLength}`);
+        }
+    }
+
     int[][] wordLists = [];
     int[] wordListIndices = [];
 
@@ -86,11 +103,36 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams) return
 
 }
 
-public function search(InvertedIndex index, string[][] ngrams) returns string[] {
+public function search(InvertedIndex index, string[][] ngrams) returns string[] | error {
     map<boolean> globalListOfWords = {};
 
+    // int maxNgramLength = index.maxNgramLength;
+
+    int maxAllowedNgramLength = index.maxNgramLength;
+    int maxActualNgramLength = -1;
+
     foreach var items in ngrams {
-        foreach var word in searchConjunctively(index, items) {
+
+        foreach var ngram in items {
+            int currentNgramLength = ngram.length();
+            if currentNgramLength > maxActualNgramLength || maxActualNgramLength < 0 {
+                maxActualNgramLength = currentNgramLength;
+            }
+        }
+
+        // foreach var ngram in items {
+        //     if ngram.length() > maxNgramLength {
+        //         return error(string`Ngrams must not be longer than ${maxNgramLength} characters`);
+        //     }
+        // }
+    }
+
+    if maxActualNgramLength > maxAllowedNgramLength {
+        return error(string`Ngrams must not be longer than ${maxAllowedNgramLength} characters. Try updating the index using following command: bal run index -- -CmaxNgramLength=${maxActualNgramLength}`);
+    }
+
+    foreach var items in ngrams {
+        foreach var word in check searchConjunctively(index, items, false) {
             boolean? value = globalListOfWords[word];
 
             if value == () {
@@ -102,10 +144,10 @@ public function search(InvertedIndex index, string[][] ngrams) returns string[] 
     return globalListOfWords.keys();
 }
 
-public function splitAndSearchConjunctively(InvertedIndex index, string ngrams) returns string[] {
+public function splitAndSearchConjunctively(InvertedIndex index, string ngrams) returns string[] | error {
     return searchConjunctively(index, regex:split(ngrams, ngramSeparator));
 }
 
-public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] {
+public function splitAndSearch(InvertedIndex index, string ngrams) returns string[] | error {
     return search(index, regex:split(ngrams, ngramGroupSeparator).map(x => regex:split(x, ngramSeparator)));
 }

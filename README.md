@@ -24,13 +24,21 @@ cd -
 
 ## Run the project
 
-To run the project use the following command (from the root of the cloned repo) to generate an inverted index:
+To run the project use the following command (from the root of the cloned repo) to generate an inverted index and save it locally as `assets/index.bin`:
 
 ```sh
-bal run search -- -Cngrams='ne eko  ah ri' -CmaxNgramLength=3 -CtopN=20
+bal run index -- -CmaxNgramLength=3
 ```
 
-The command uses [dictionary of english words](https://github.com/dwyl/english-words/blob/master/words_alpha.txt) and allows to find all words which match all of character n-grams separated by single space or any group separated by two spaces. The otuput looks like this:
+The index is generated from a [dictionary of english words](https://github.com/dwyl/english-words/blob/master/words_alpha.txt).  
+
+Then you can execute command for searching required words:
+
+```sh
+bal run search -- -Cngrams='ne eko  ah ri' -CtopN=5
+```
+
+The command allows to find all words that match all of character n-grams separated by single space or any group separated by two spaces. The otuput looks like this:
 
 ```sh
 Matched words:
@@ -40,24 +48,7 @@ uriah
 mahori
 meriah
 pahari
-pariah
-zurich
-ahriman
-daribah
-paharia
-pariahs
-rahdari
-saharic
-kekotene
-mahzorim
-saharian
-shaharit
-ahistoric
-bahuvrihi
-guaharibo
 ```
-
-Due to an enormous memory consumption by ballerina during serialization the index is not saved to disk and recomputed each time instead.
 
 # Test
 
