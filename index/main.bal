@@ -5,14 +5,15 @@ import ballerina/regex;
 // https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt 
 
 // configurable string root = "https://gist.githubusercontent.com/";
-configurable string root = "https://raw.githubusercontent.com/";
 // configurable string user = "zeionara";
-configurable string user = "dwyl";
 // configurable string gist = "bcb95ba1bf0bdfa9bae6f2091e998e9e";
-configurable string repository = "english-words";
 // configurable string key = "3457a9c8559b5826103b1fbe7797cdd50fd07b5d";
-configurable string branch = "master";
 // configurable string filename = "words-alpha.txt";
+
+configurable string root = "https://raw.githubusercontent.com/";
+configurable string user = "dwyl";
+configurable string repository = "english-words";
+configurable string branch = "master";
 configurable string filename = "words_alpha.txt";
 
 configurable string indexPath = "assets/index.bin";
@@ -58,6 +59,8 @@ public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex 
         vocabulary: vocabulary
     };
 
+    check writeIndex(indexPath, index);
+
     return index;
 
 }
@@ -85,11 +88,16 @@ public function main() returns error? {
     //     vocabulary: vocabulary
     // };
 
-    var index = check makeIndex();
+    // var index = check makeIndex();
+
+    var index = check readIndex(indexPath);
 
     io:println("Searching...");
 
-    foreach string word in splitAndSearch(index, "cls nn  spc nn  cla sp") {
+    // foreach string word in splitAndSearch(index, "cls nn  spc nn  cla sp") {
+
+    // foreach string word in splitAndSearch(index, "li ed  li ed") {
+    foreach string word in splitAndSearch(index, "ah ri").slice(0, 10) {
         io:println(word);
     }
 
