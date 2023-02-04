@@ -26,14 +26,26 @@ public function searchConjunctively(InvertedIndex index, string[] ngrams, boolea
     int[] wordListIndices = [];
 
     foreach string ngram in ngrams {
+
+        // io:println(string`Handling ngram ${ngram}`);
+
         int[]? wordIds = index.content[ngram];
+
+        // io:println(wordIds);
+
         if wordIds != () {
             wordLists.push(wordIds);
             wordListIndices.push(0);
         }
     }
 
+    // io:println(wordLists);
+
     int[] relevantWordIds = [];
+
+    if wordLists.length() == 0 {
+        return [];
+    }
 
     while true {
 

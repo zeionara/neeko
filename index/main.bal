@@ -147,6 +147,11 @@ public function main() returns error? {
 
             check writeIndex(path, index);
 
+            // foreach string word in splitAndSearch(index, "li  ed") {
+            // foreach string word in (check splitAndSearch(index, "pahar")) {
+            //     io:println(word);
+            // }
+
             i += 1;
         }
     } else {
