@@ -29,6 +29,7 @@ public function main() returns error? {
                 }
                 i += 1;
             }
+            io:println("");
         }
     } else {
         return error(string`File ${indexPath} does not exist, cannot read index`);
