@@ -18,19 +18,41 @@ configurable string filename = "words_alpha.txt";
 
 configurable string indexPath = "assets/index.bin";
 configurable int maxNgramLength = 2;
+configurable int nSegments = 0;
 
 configurable string wordSeparator = "\n";
 
-function segment(string[] items, int segmentSize) returns string[][] {
+function segment(string[] items, int nSegments) returns string[][] {
     int startIndex = 0;
     int nItems = items.length();
 
     string[][] segments = [];
 
+    int lastSegmentAppendixSize = nItems % nSegments;
+    int segmentSize = nItems / nSegments;
+
+    // int segmentSize = 0;
+
+    // if lastSegmentSize > 0 {
+    //     segmentSize = nItems / (nSegments - 1);
+    // } else {
+    //     segmentSize = nItems / nSegments;
+    // }
+
+    int i = 1;
+
     while startIndex < nItems {
-        var lastIndex = startIndex + segmentSize;
-        segments.push(items.slice(startIndex, lastIndex > nItems ? nItems : lastIndex));
-        startIndex += segmentSize;
+        if i < nSegments {
+            var lastIndex = startIndex + segmentSize;
+            segments.push(items.slice(startIndex, lastIndex > nItems ? nItems : lastIndex));
+            startIndex += segmentSize;
+        } else {
+            var lastIndex = startIndex + segmentSize + lastSegmentAppendixSize;
+            segments.push(items.slice(startIndex, lastIndex > nItems ? nItems : lastIndex));
+            startIndex += segmentSize + lastSegmentAppendixSize;
+        }
+
+        i += 1;
     }
 
     return segments;
@@ -86,6 +108,8 @@ public function main() returns error? {
     //     content: check buildInvertedIndex(vocabulary, maxLength = maxNgramLength),
     //     vocabulary: vocabulary
     // };
+
+    // io:println(nSegments);
 
     io:println("Generating index...");
 
