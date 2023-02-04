@@ -1,6 +1,7 @@
 import ballerina/io;
 import ballerina/http;
 import ballerina/regex;
+import ballerina/file;
 
 // https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt 
 
@@ -58,7 +59,7 @@ function segment(string[] items, int nSegments) returns string[][] {
     return segments;
 }
 
-public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex | error {
+public function makeVocabulary() returns string[] | error {
     // var segments = segment(["foo", "bar", "baz", "qux", "quux"], 2);
 
     // io:println(segments);
@@ -75,6 +76,11 @@ public function makeIndex(int maxLength = maxNgramLength) returns InvertedIndex 
 
     string content = check response.getTextPayload();
     string[] vocabulary = regex:split(content, wordSeparator);
+
+    return vocabulary;
+}
+
+public function makeIndex(string[] vocabulary, int maxLength = maxNgramLength) returns InvertedIndex | error {
 
     InvertedIndex index = {
         content: check buildInvertedIndex(vocabulary, maxLength = maxLength),
@@ -111,13 +117,58 @@ public function main() returns error? {
 
     // io:println(nSegments);
 
-    io:println("Generating index...");
+    var vocabulary = check makeVocabulary();
 
-    var index = check makeIndex(maxLength = maxNgramLength);
+    if nSegments > 0 {
+        boolean dirExists = check file:test(indexPath, file:EXISTS);
+        // io:println(dirExists);
+        if dirExists {
+            io:println(string`File ${indexPath} already exists. Checking that it is a directory...`);
+            var metadata = file:readDir(indexPath);
+            if metadata is error {
+                return error(string`File ${indexPath} exists and is not a directory. Canoot override`);
+            }
+            check file:remove(indexPath, file:RECURSIVE);
+        }
+        check file:createDir(indexPath);
 
-    io:println("Generated index, saving...");
+        var segments = segment(vocabulary, nSegments = nSegments);
+        // var nSegments = segments.length();
 
-    check writeIndex(indexPath, index);
+        int i = 1;
+
+        foreach var part in segments {
+            io:println(`Handling ${i} / ${nSegments} segment`);
+
+            var index = check makeIndex(part, maxLength = maxNgramLength);
+
+            string path = check file:joinPath(indexPath, string`index.${i}.bin`);
+            // string path = string:concat(indexPath, ".", i.toString());
+
+            check writeIndex(path, index);
+
+            i += 1;
+        }
+    } else {
+        boolean fileExists = check file:test(indexPath, file:EXISTS);
+        // io:println(fileExists);
+        if fileExists {
+            io:println(string`File ${indexPath} already exists. Checking that it is not a directory...`);
+            var metadata = file:readDir(indexPath);
+            if !(metadata is error) {
+                return error(string`File ${indexPath} exists and is a directory. Canoot override`);
+            }
+            check file:remove(indexPath);
+        }
+
+        io:println("Generating index...");
+
+        var index = check makeIndex(vocabulary, maxLength = maxNgramLength);
+
+        io:println("Generated index, saving...");
+
+        check writeIndex(indexPath, index);
+    }
 
     // var index = check readIndex(indexPath);
 
