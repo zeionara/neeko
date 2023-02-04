@@ -1,2 +1,5 @@
 assets/index.bin filter=lfs diff=lfs merge=lfs -text
 assets/index filter=lfs diff=lfs merge=lfs -text
+assets/index/index.2.bin filter=lfs diff=lfs merge=lfs -text
+assets/index/index.3.bin filter=lfs diff=lfs merge=lfs -text
+assets/index/index.1.bin filter=lfs diff=lfs merge=lfs -text
